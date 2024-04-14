@@ -17,7 +17,7 @@ public class CraftViewModel : MonoBehaviour
     void Start()
     {
         StartCoroutine(GetCraftsCoroutine());
-        Debug.Log("GetCraftsCoroutine started");
+        TextLog.Instance.Log("GetCraftsCoroutine started");
         // TextLog.Instance.Log("GetCraftsCoroutine started");
     }
 

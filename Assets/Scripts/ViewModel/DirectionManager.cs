@@ -14,28 +14,24 @@ public class DirectionManager : MonoBehaviour
     private Step currentStep;
     private List<Step> currentStepList;
     public TextMeshProUGUI instructionText;
-    public VideoPlayer stepVideoPlayer;
+    public VideoPlayer stepVideoPlayer; // Ensure this component is attached to a GameObject in the scene
     public Button nextStepButton;
     public Button previousStepButton;
     private int currentStepIndex = 0;
 
     void Start()
     {
-        // string currentCraftId = "C001"; // Example craft ID, assumed to be set or retrieved appropriately
         InitializeDirection();
-        // DisplayCurrentStep(); // Initially display the first step without starting the timer
     }
 
     void OnEnable()
     {
-        // SceneManager.sceneLoaded += OnSceneLoaded;
         nextStepButton.onClick.AddListener(GoToNextStep);
         previousStepButton.onClick.AddListener(GoToPreviousStep);
     }
 
     void OnDestroy()
     {
-        // SceneManager.sceneLoaded -= OnSceneLoaded;
         nextStepButton.onClick.RemoveListener(GoToNextStep);
         previousStepButton.onClick.RemoveListener(GoToPreviousStep);
     }
@@ -49,69 +45,46 @@ public class DirectionManager : MonoBehaviour
             if (currentStepList.Count > 0)
             {
                 DisplayCurrentStep();
-                // AdjustButtonInteractivity();
             }
         }
-    }
-
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        InitializeDirection();
     }
 
     private void DisplayCurrentStep()
     {
         if (currentStepList != null && currentStepIndex < currentStepList.Count)
         {
-            currentStep = currentStepList[currentStepIndex]; // Ensure currentStep is updated here
+            currentStep = currentStepList[currentStepIndex];
             instructionText.text = currentStep.Step_Instruction;
-            // DisplayItemsForCurrentStep();
 
-            // Assuming TextLog.Instance.Log is your custom logging method.
-            // TextLog.Instance.Log($"Displaying currentStep: + {currentStep.Step_Instruction}");
-            // TextLog.Instance.Log($"currentStepIndex: + {currentStepIndex}");
+            // Manage video player
+            if (!string.IsNullOrEmpty(currentStep.Step_Video))
+            {
+                stepVideoPlayer.source = VideoSource.Url;
+                stepVideoPlayer.url = currentStep.Step_Video;
+                stepVideoPlayer.errorReceived += HandleVideoError;
 
-            // AdjustButtonInteractivity();
+                stepVideoPlayer.Prepare();
+
+                stepVideoPlayer.prepareCompleted += (source) =>
+                {
+                    TextLog.Instance.Log("Video prepared successfully.");
+                    stepVideoPlayer.Play();
+                };
+            }
+            else
+            {
+                TextLog.Instance.Log("No video to play for this step.");
+                stepVideoPlayer.Stop(); // Stop the video if there is no associated video
+            }
         }
     }
 
-    // private void DisplayItemsForCurrentStep()
-    // {
-    //     // Fetch items for the current craft and current step
-    //     var itemsForCurrentStep = ItemDataPersist.Instance.GetItemsForStep(currentCraft.Craft_ID, currentStep.Step_ID);
-
-    //     // Assuming you have a method to update your UI with these items
-    //     UpdateUIWithItems(itemsForCurrentStep);
-    // }
-
-    // private void UpdateUIWithItems(List<Item> items)
-    // {
-    //     // Update your UI elements here, e.g., a list or set of text fields
-    //     // For example: foreach (var item in items) { /* Update UI */ }
-    // }
-
     public void GoToNextStep()
     {
-        if (currentStepIndex < currentStepList.Count - 1) // Check if there is a next step
+        if (currentStepIndex < currentStepList.Count - 1)
         {
-            if (currentStep.Timer_Duration > 0)
-            {
-                if (int.TryParse(currentStep.Step_ID, out int stepIdInt))
-                {
-                    TextLog.Instance.Log($"[DM] Duration found, Adding timer with duration of: {currentStep.Timer_Duration} and ID {stepIdInt}");
-                    timerViewModel.AddTimer(currentStep.Timer_Duration, stepIdInt);
-                    currentStepIndex++;
-                    currentStep = currentStepList[currentStepIndex];
-                    DisplayCurrentStep();
-                }
-                else
-                {
-                    TextLog.Instance.Log("[DM] No Duration Found, moving to next step");
-                    currentStepIndex++;
-                    currentStep = currentStepList[currentStepIndex];
-                    DisplayCurrentStep();
-                }
-            }
+            currentStepIndex++;
+            DisplayCurrentStep();
         }
         else
         {
@@ -128,14 +101,20 @@ public class DirectionManager : MonoBehaviour
         }
         else
         {
-            SceneManager.LoadScene("CraftPlay");
+            SceneManager.LoadScene("CraftPlay"); // Adjust according to your scene setup
         }
     }
 
-    // void AdjustButtonInteractivity()
-    // {
-    //     nextStepButton.interactable = currentStepIndex < currentStepList.Count - 1;
-    //     previousStepButton.interactable = currentStepIndex > 0;
-    // }
+    private void HandleVideoError(VideoPlayer source, string message)
+    {
+        TextLog.Instance.Log("Video Error: " + message);
+    }
+
 }
+
+// void AdjustButtonInteractivity()
+// {
+//     nextStepButton.interactable = currentStepIndex < currentStepList.Count - 1;
+//     previousStepButton.interactable = currentStepIndex > 0;
+// }
 

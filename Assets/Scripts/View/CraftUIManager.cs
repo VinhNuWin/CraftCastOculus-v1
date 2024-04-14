@@ -4,18 +4,15 @@ using UnityEngine;
 public class CraftUIManager : MonoBehaviour
 {
     private TextLog textLog;
-    public StepView stepView;
-    public ItemUI itemUI;
-    public CraftUI craftUI;
+
+    public StepUI stepUI; // Assuming this is a single UI element for displaying a step.
+    public ItemUI itemUI; // Assuming this is a single UI element for displaying an item.
+    public CraftUI craftUI; // UI component to display craft details.
     private Craft currentCraft;
     private List<Step> currentCraftSteps;
     private List<Item> currentCraftItems;
-    public GameObject stepPrefab;
-    public Transform stepsContentPanel;
-    public GameObject itemPrefab;
-    public Transform itemsContentPanel;
+    // Removed prefab references since they are not needed now.
     public static CraftUIManager Instance { get; private set; }
-
 
     private void Awake()
     {
@@ -23,7 +20,6 @@ public class CraftUIManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            // TextLog.Instance.Log("[CraftUIManager] Craft/Step/Item detailViewModel Instantiated");
             CraftDataPersist.Instance.OnCraftSelected += OnCraftSelected;
         }
         else if (Instance != this)
@@ -34,101 +30,42 @@ public class CraftUIManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        // Unsubscribe to prevent memory leaks
         CraftDataPersist.Instance.OnCraftSelected -= OnCraftSelected;
     }
 
     private void OnCraftSelected(Craft selectedCraft)
     {
-        var currentCraft = selectedCraft;
-        if (currentCraft != null)
+        if (selectedCraft != null)
         {
-            // TextLog.Instance.Log($"[CraftUIManager] craft: {currentCraft.Craft_Name}");
-            UpdateUIWithCraft(currentCraft);
-        }
-        else
-        {
-            TextLog.Instance.Log("[CraftUIManager] craft is null or empty");
-        }
-
-        var craftId = currentCraft.Craft_ID;
-        //Fetch Steps for SelectedCraft and Update UI
-        if (craftId != null)
-        {
-            TextLog.Instance.Log($"[CraftUIManager] StepsView called");
-            stepView.DisplayStepsForCraft(craftId);
-        }
-        else
-        {
-            TextLog.Instance.Log("[CraftUIManager] Steps craftId is null");
-        }
-
-        //Fetch items for SelectedCraft and Update UI
-        var items = ItemDataPersist.Instance.GetItemsForCraft(selectedCraft.Craft_ID);
-        if (items != null && items.Count > 0)
-        {
-            TextLog.Instance.Log($"[CraftUIManager] Items count: {items.Count}");
-            UpdateUIWithItems(items);
-        }
-        else
-        {
-            TextLog.Instance.Log("[CraftUIManager] Items is null or empty");
+            UpdateUIWithCraft(selectedCraft);
+            var steps = StepDataPersist.Instance.GetStepsForCraft(selectedCraft.Craft_ID);
+            UpdateUIWithSteps(steps); // Updated method to display steps without prefabs.
+            var items = ItemDataPersist.Instance.GetItemsForCraft(selectedCraft.Craft_ID);
+            UpdateUIWithItems(items); // Updated method to display items without prefabs.
         }
     }
 
-
-
-    // private void UpdateUIWithSteps(List<Step> steps)
-    // {
-    //     // TextLog.Instance.Log($"[CraftUIManager] UpdateStepsUI beginning");
-    //     foreach (Transform child in stepsContentPanel)
-    //     {
-    //         Destroy(child.gameObject);
-    //     }
-
-    //     foreach (var step in steps)
-    //     {
-    //         // TextLog.Instance.Log($"[CraftUIManager]Setting up step with instruction: {step.Title}");
-    //         var stepItem = Instantiate(stepPrefab, stepsContentPanel);
-    //         var stepUIComponent = stepItem.GetComponent<StepUI>();
-    //         stepUI.Setup(step);
-    //     }
-    //     // TextLog.Instance.Log("[CraftUIManager] UpdateStepsUI complete");
-    // }
+    private void UpdateUIWithSteps(List<Step> steps)
+    {
+        stepUI.ClearSteps(); // Clears existing steps
+        foreach (var step in steps)
+        {
+            stepUI.AddStep(step); // Adds each step dynamically
+        }
+    }
 
     private void UpdateUIWithItems(List<Item> items)
     {
-        TextLog.Instance.Log("[CraftUIManager] Updating UI with items...");
-
-        // Example: Iterate through items and log their names
+        itemUI.ClearItems(); // Clears existing items
         foreach (var item in items)
         {
-            var materialItem = Instantiate(itemPrefab, itemsContentPanel);
-            var itemUIComponent = materialItem.GetComponent<ItemUI>();
-            if (itemUIComponent != null)
-            {
-                itemUIComponent.Setup(item); // Use the component attached to the instantiated prefab
-                // TextLog.Instance.Log($"[CraftUIManager] Item: {item.Item_Name}, Quantity: {item.Quantity}");
-            }
-            else
-            {
-                TextLog.Instance.Log("[CraftUIManager] Failed to get ItemUI component on instantiated item prefab.");
-            }
+            itemUI.AddItem(item); // Adds each item dynamically
         }
-
-        // TextLog.Instance.Log("[CraftUIManager] Items UI update complete.");
     }
+
 
     private void UpdateUIWithCraft(Craft craft)
     {
-        if (craftUI != null)
-        {
-            TextLog.Instance.Log("[CraftUIManager] UpdateUIWithCraft called");
-            craftUI.Setup(craft);
-        }
-        else
-        {
-            TextLog.Instance.Log("[CraftUIManager] craftUI is null");
-        }
+        craftUI.Setup(craft); // No change needed here, assuming craftUI.Setup(craft) is already implemented correctly.
     }
 }

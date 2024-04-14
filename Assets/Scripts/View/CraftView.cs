@@ -41,7 +41,7 @@ public class CraftView : MonoBehaviour
     public void UpdateCraftFeedUI(List<Craft> crafts)
     {
         // Clear existing crafts before updating
-        // ClearExistingCrafts();
+        ClearExistingCrafts();
         // TextLog.Instance.Log($"[UpdateCraftFeedUI] Cleared existing crafts.");
 
         // Limit the number of crafts to display to the smaller of the number of crafts or prefabs
@@ -56,7 +56,7 @@ public class CraftView : MonoBehaviour
             CraftUI craftUI = prefab.GetComponent<CraftUI>();
             if (craftUI != null)
             {
-                // TextLog.Instance.Log($"[UpdateCraftFeedUI] Setting up craft UI for {crafts[i].Craft_Name}.");
+                TextLog.Instance.Log($"[UpdateCraftFeedUI] Setting up craft UI for {crafts[i].Craft_Name}.");
                 craftUI.Setup(crafts[i]);
             }
             else
