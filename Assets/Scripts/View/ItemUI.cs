@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class ItemUI : MonoBehaviour
 {
@@ -9,16 +10,37 @@ public class ItemUI : MonoBehaviour
 
     private List<TextMeshProUGUI> activeItemTexts = new List<TextMeshProUGUI>();
 
-    // Dynamically adds an item to the UI
+    void Start()
+    {
+        SetupLayoutComponents();
+    }
+
+    private void SetupLayoutComponents()
+    {
+        // Ensure there is a Vertical Layout Group and Content Size Fitter
+        var layoutGroup = itemListContainer.GetComponent<VerticalLayoutGroup>();
+        if (layoutGroup == null)
+        {
+            layoutGroup = itemListContainer.gameObject.AddComponent<VerticalLayoutGroup>();
+            layoutGroup.childForceExpandHeight = false;
+        }
+
+        var contentSizeFitter = itemListContainer.GetComponent<ContentSizeFitter>();
+        if (contentSizeFitter == null)
+        {
+            contentSizeFitter = itemListContainer.gameObject.AddComponent<ContentSizeFitter>();
+            contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+        }
+    }
+
     public void AddItem(Item item)
     {
         var itemTextClone = Instantiate(itemTemplateText, itemListContainer);
-        itemTextClone.text = $"{item.Item_Name} - Quantity: {item.Quantity}";
+        itemTextClone.text = $"{item.Item_Name}  {item.Quantity}";
         itemTextClone.gameObject.SetActive(true);
         activeItemTexts.Add(itemTextClone);
     }
 
-    // Clears all items from the UI
     public void ClearItems()
     {
         foreach (var itemText in activeItemTexts)
@@ -30,27 +52,34 @@ public class ItemUI : MonoBehaviour
 }
 
 
-
-// using System.Collections;
 // using System.Collections.Generic;
 // using UnityEngine;
 // using TMPro;
-// using UnityEngine.UI;
-// using System.Linq;
 
 // public class ItemUI : MonoBehaviour
 // {
-//     private Item item;
-//     private TextLog textLog;
-//     public TextMeshProUGUI itemNameText;
-//     public TextMeshProUGUI itemQuantityText;
+//     public Transform itemListContainer; // Parent container for item entries
+//     public TextMeshProUGUI itemTemplateText; // Template TextMeshPro element for items, set as inactive in the Editor
 
-//     public void Setup(Item item)
+//     private List<TextMeshProUGUI> activeItemTexts = new List<TextMeshProUGUI>();
+
+//     // Dynamically adds an item to the UI
+//     public void AddItem(Item item)
 //     {
-//         this.item = item;
-//         // TextLog.Instance.Log("ItemSetup assigning view for : " + this.item.Item_Name);
+//         var itemTextClone = Instantiate(itemTemplateText, itemListContainer);
+//         itemTextClone.text = $"{item.Item_Name}  {item.Quantity}";
+//         itemTextClone.gameObject.SetActive(true);
+//         activeItemTexts.Add(itemTextClone);
+//     }
 
-//         itemNameText.text = this.item.Item_Name;
-//         itemQuantityText.text = this.item.Quantity;
+//     // Clears all items from the UI
+//     public void ClearItems()
+//     {
+//         foreach (var itemText in activeItemTexts)
+//         {
+//             Destroy(itemText.gameObject);
+//         }
+//         activeItemTexts.Clear();
 //     }
 // }
+

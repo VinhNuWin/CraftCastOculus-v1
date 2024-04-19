@@ -1,22 +1,37 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI; // Ensure this namespace is included for UI components
 
 public class StepUI : MonoBehaviour
 {
-    public Transform stepListContainer; // Parent container for step entries
+    public Transform stepListContainer; // This should be the 'Content' inside the ScrollView
     public TextMeshProUGUI stepTemplateText; // Template TextMeshPro element for steps, set as inactive in the Editor
 
     private List<TextMeshProUGUI> activeStepTexts = new List<TextMeshProUGUI>();
 
+    // Start
+    void Start()
+    {
+        // Ensure the container has these components
+        var layoutGroup = stepListContainer.GetComponent<VerticalLayoutGroup>();
+        if (layoutGroup == null) stepListContainer.gameObject.AddComponent<VerticalLayoutGroup>();
+
+        var contentSizeFitter = stepListContainer.GetComponent<ContentSizeFitter>();
+        if (contentSizeFitter == null)
+        {
+            contentSizeFitter = stepListContainer.gameObject.AddComponent<ContentSizeFitter>();
+            contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+        }
+    }
+
     // Adds a step to the UI
     public void AddStep(Step step)
     {
-        // Clone the template text element for a new step
         var stepTextClone = Instantiate(stepTemplateText, stepListContainer);
         stepTextClone.text = $"{step.Title}: {step.Step_Instruction}";
-        stepTextClone.gameObject.SetActive(true); // Make sure the clone is active (stepTemplateText should be inactive)
-        activeStepTexts.Add(stepTextClone); // Keep track of it for potential future removal or updates
+        stepTextClone.gameObject.SetActive(true);
+        activeStepTexts.Add(stepTextClone);
     }
 
     // Clears all steps from the UI
@@ -24,35 +39,8 @@ public class StepUI : MonoBehaviour
     {
         foreach (var stepText in activeStepTexts)
         {
-            Destroy(stepText.gameObject); // Destroy the text GameObject
+            Destroy(stepText.gameObject);
         }
-        activeStepTexts.Clear(); // Clear the list
+        activeStepTexts.Clear();
     }
 }
-
-
-
-
-// using System.Collections;
-// using System.Collections.Generic;
-// using UnityEngine;
-// using TMPro;
-// using UnityEngine.UI;
-// using System.Linq;
-
-// public class StepUI : MonoBehaviour
-// {
-//     private TextLog textLog;
-//     private Step step;
-//     public TextMeshProUGUI instructionText;
-//     public TextMeshProUGUI stepOrderText;
-
-//     public void Setup(Step step)
-//     {
-//         this.step = step;
-//         TextLog.Instance.Log($"[StepSetup] Setting up step with instruction: {this.step.Step_Instruction}");
-
-//         instructionText.text = this.step.Step_Instruction;
-//         // stepOrderText.text = this.step.Step_Order.ToString();
-//     }
-// }

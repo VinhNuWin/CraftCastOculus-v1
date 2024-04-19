@@ -18,9 +18,16 @@ public class CraftDataPersist : MonoBehaviour
         {
             if (selectedCraft != value)
             {
-                TextLog.Instance.Log("[CDP] SelectedCraft updated");
                 selectedCraft = value;
-                OnCraftSelected?.Invoke(selectedCraft);
+                TextLog.Instance.Log($"[CDP] SelectedCraft updated with {selectedCraft.Craft_Name}");
+                if (OnCraftSelected != null)
+                {
+                    OnCraftSelected?.Invoke(selectedCraft);
+                }
+                else
+                {
+                    TextLog.Instance.Log("[CDP] No subscribers to OnCraftSelected when trying to invoke.");
+                }
             }
         }
     }

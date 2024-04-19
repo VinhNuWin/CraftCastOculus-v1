@@ -16,6 +16,14 @@ public class CraftUI : MonoBehaviour
     [SerializeField]
     private CraftSelectPokeInteractable craftSelectPokeInteractable;
 
+    // void Start()
+    // {
+    //     craftSelectPokeInteractable = GetComponentInChildren<CraftSelectPokeInteractable>(true);
+    //     if (craftSelectPokeInteractable == null)
+    //     {
+    //         Debug.LogError("CraftSelectPokeInteractable not found on the GameObject or its children.");
+    //     }
+    // }
 
     public void Setup(Craft craft)
     {
@@ -30,25 +38,41 @@ public class CraftUI : MonoBehaviour
             if (craftCategory != null) craftCategory.text = this.craft.Category;
             if (postDate != null) postDate.text = this.craft.Post_Date.ToString("MMMM dd, yyyy");
 
-            LoadAndSetImage(craft.Craft_Image, craftImage);
-            // LoadAndSetImage(craft.Author_Image, authorImage);
+            if (!string.IsNullOrEmpty(craft.Craft_Image))
+            {
+                LoadAndSetImage(craft.Craft_Image, craftImage);
+            }
+
+            if (!string.IsNullOrEmpty(craft.Author_Image) && authorImage != null)
+            {
+                LoadAndSetImage(craft.Author_Image, authorImage);
+            }
+            else
+            {
+                // Optionally handle cases where there is no author image or the image component is not assigned
+                if (authorImage != null) authorImage.sprite = defaultImageSprite; // Set to default if no author image provided
+            }
+
+            craftSelectPokeInteractable = GetComponentInChildren<CraftSelectPokeInteractable>(true);
 
             if (craftSelectPokeInteractable != null)
             {
+                craftSelectPokeInteractable.OnPoke.RemoveAllListeners();  // Clear previous listeners
                 craftSelectPokeInteractable.OnPoke.AddListener(() =>
                 {
-                    if (this.craft != null) // Check again in case the craft reference was lost
+                    if (this.craft != null) // Additional safety check
                     {
-                        TextLog.Instance.Log($"Craft selected with ID: {this.craft.Craft_ID}");
+                        TextLog.Instance.Log($"[CraftUI] Attempting to set selected craft: {this.craft.Craft_ID} successful");
                         CraftDataPersist.Instance.SelectedCraft = this.craft;
-                        OnCraftSelect(); // This line calls your OnCraftSelect method
                     }
                 });
             }
+
+
         }
         catch (Exception ex)
         {
-            // TextLog.Instance.Log($"[CraftUI] Error in Setup method: {ex.Message}");
+            TextLog.Instance.Log($"[CraftUI] Error in Setup method: {ex.Message}");
             // Optionally, log the stack trace for more detailed debugging information.
             Debug.LogError($"Stack Trace: {ex.StackTrace}");
         }

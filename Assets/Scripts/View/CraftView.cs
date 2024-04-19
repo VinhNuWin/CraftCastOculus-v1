@@ -1,4 +1,10 @@
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+using System;
+using System.Globalization;
+using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 
 public class CraftView : MonoBehaviour
@@ -11,21 +17,25 @@ public class CraftView : MonoBehaviour
     [SerializeField]
     private Transform craftListContentPanel; // The parent panel for craft items
     [SerializeField]
-    private List<GameObject> preloadedGameObjectPrefabs; // List to hold instantiated prefab GameObjects
+    private List<GameObject> prefabTemplates; // List to hold instantiated prefab GameObjects
+    // private Dictionary<string, GameObject> instantiatedPrefabs;
 
     private void Awake()
     {
-        TextLog.Instance.Log("[CV] OnCraftsFetched subscribed.");
-        // If craftViewModel is not set in the inspector, try to find it
         if (craftViewModel == null)
         {
             craftViewModel = FindObjectOfType<CraftViewModel>();
+            TextLog.Instance.Log("[CV] CraftViewModel was null and found via FindObjectOfType.");
         }
 
-        // Subscribe to the OnCraftsFetched event
         if (craftViewModel != null)
         {
             craftViewModel.OnCraftsFetched += UpdateCraftFeedUI;
+            TextLog.Instance.Log("[CV] Subscribed to OnCraftsFetched.");
+        }
+        else
+        {
+            TextLog.Instance.Log("[CV] Failed to find CraftViewModel.");
         }
     }
 
@@ -42,119 +52,49 @@ public class CraftView : MonoBehaviour
     {
         // Clear existing crafts before updating
         ClearExistingCrafts();
-        // TextLog.Instance.Log($"[UpdateCraftFeedUI] Cleared existing crafts.");
 
         // Limit the number of crafts to display to the smaller of the number of crafts or prefabs
-        int displayLimit = Mathf.Min(crafts.Count, preloadedGameObjectPrefabs.Count);
-        // TextLog.Instance.Log($"[UpdateCraftFeedUI] Displaying up to {displayLimit} crafts out of {crafts.Count} available.");
+        int displayLimit = Mathf.Min(crafts.Count, prefabTemplates.Count);
 
         for (int i = 0; i < displayLimit; i++)
         {
-            // Activate the prefab and set up its data
-            GameObject prefab = preloadedGameObjectPrefabs[i];
-            prefab.SetActive(true);
-            CraftUI craftUI = prefab.GetComponent<CraftUI>();
-            if (craftUI != null)
+            string prefabName = i == 0 ? "RoundedBoxToggle" : $"RoundedBoxToggle ({i})";
+            // GameObject prefab = prefabTemplates[i];
+            GameObject prefab = prefabTemplates.FirstOrDefault(p => p.name == prefabName);
+
+            if (prefab != null)
             {
-                TextLog.Instance.Log($"[UpdateCraftFeedUI] Setting up craft UI for {crafts[i].Craft_Name}.");
-                craftUI.Setup(crafts[i]);
+                prefab.SetActive(true);
+                CraftUI craftUI = prefab.GetComponent<CraftUI>();
+
+                if (craftUI != null)
+                {
+                    // TextLog.Instance.Log($"[UpdateCraftFeedUI] Setting up craft UI for {crafts[i].Craft_Name}.");
+                    craftUI.Setup(crafts[i]);
+                }
+                else
+                {
+                    // TextLog.Instance.Log($"[UpdateCraftFeedUI] CraftUI component not found on prefab at index {i}.");
+                }
             }
-            else
+
+            // Deactivate any remaining prefabs
+            for (int j = displayLimit; j < prefabTemplates.Count; j++)
             {
-                TextLog.Instance.Log($"[UpdateCraftFeedUI] CraftUI component not found on prefab at index {i}.");
+                prefabTemplates[j].SetActive(false);
             }
+
+            // TextLog.Instance.Log("[UpdateCraftFeedUI] Craft feed UI update complete.");
         }
-
-        // Deactivate any remaining prefabs
-        // for (int i = displayLimit; i < preloadedGameObjectPrefabs.Count; i++)
-        // {
-        //     preloadedGameObjectPrefabs[i].SetActive(false);
-        // }
-
-        TextLog.Instance.Log("[UpdateCraftFeedUI] Craft feed UI update complete.");
     }
 
 
     // Clear existing crafts from the content panel
     private void ClearExistingCrafts()
     {
-        foreach (var prefab in preloadedGameObjectPrefabs)
+        foreach (var prefab in prefabTemplates)
         {
             prefab.SetActive(false); // Deactivate instead of destroying for reuse
         }
     }
 }
-
-
-// using UnityEngine;
-// using UnityEngine.UI;
-// using TMPro;
-// using System;
-// using System.Globalization;
-// using System.Collections;
-// using System.Linq;
-// using System.Collections.Generic;
-
-// public class CraftView : MonoBehaviour
-// {
-//     private TextLog textLog;
-//     [SerializeField]
-//     private CraftViewModel craftViewModel;
-//     public GameObject craftPrefab;
-//     public Transform craftListContentPanel;
-//     public List<GameObject> preloadedGameObjectPrefabs = new List<GameObject>();
-//     [SerializeField] private List<CraftUI> preloadedCraftUIComponents;
-//     // Assign in the editor
-
-
-//     private void Awake()
-//     {
-//         TextLog.Instance.Log("[CV] OnCraftsFetched subscribed");
-//         craftViewModel.OnCraftsFetched += UpdateCraftFeedUI;
-//         // If not set in the inspector, try to find it
-//         if (craftViewModel == null)
-//         {
-//             craftViewModel = FindObjectOfType<CraftViewModel>();
-//         }
-//     }
-
-//     private void OnDestroy()
-//     {
-//         craftViewModel.OnCraftsFetched -= UpdateCraftFeedUI;
-//     }
-
-//     public void ClearExistingCrafts(Transform targetPanel)
-//     {
-//         foreach (Transform child in targetPanel)
-//         {
-//             Destroy(child.gameObject);
-//         }
-//     }
-
-//     //  List for Craft Feed
-
-//     public void UpdateCraftFeedUI(List<Craft> crafts)
-//     {
-//         int displayLimit = Mathf.Min(crafts.Count, preloadedPrefabs.Count);
-//         for (int i = 0; i < displayLimit; i++)
-//         {
-//             // Assume preloadedPrefabs is a List<GameObject> with your prefab instances
-//             GameObject prefab = preloadedPrefabs[i];
-//             prefab.SetActive(true); // Activate the prefab
-//                                     // Assume each prefab has a CraftUI component to set up its data
-//             CraftUI craftUI = prefab.GetComponent<CraftUI>();
-//             if (craftUI != null)
-//             {
-//                 TextLog.Instance.Log($"[CV] Calling Setup for {crafts[i].Craft_Name}");
-//                 craftUI.Setup(crafts[i]);
-//             }
-//         }
-
-//         // Deactivate any remaining prefabs
-//         for (int i = displayLimit; i < preloadedPrefabs.Count; i++)
-//         {
-//             preloadedPrefabs[i].SetActive(false);
-//         }
-//     }
-
-// }

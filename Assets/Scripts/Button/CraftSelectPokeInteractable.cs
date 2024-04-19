@@ -2,7 +2,7 @@ using Oculus.Interaction;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class CraftSelectPokeInteractable : MonoBehaviour
+public class CraftSelectPokeInteractable : MonoBehaviour, IPokeInteractable
 {
     public UnityEvent OnPoke;
 
@@ -13,17 +13,21 @@ public class CraftSelectPokeInteractable : MonoBehaviour
     {
         if (eventWrapper != null)
         {
-            // Subscribe to the appropriate events from the event wrapper
-            // Assuming these events exist and are relevant to your use case
-            eventWrapper.WhenSelect.AddListener(HandlePokeDetected);
-            // Depending on the SDK version, you might need to use different events
+            eventWrapper.WhenSelect.AddListener(HandleSelect);
         }
     }
 
-    private void HandlePokeDetected()
+    public void SimulatePoke()
+    {
+        // Directly invoke the OnPoke event to simulate a poke
+        OnPoke?.Invoke();
+    }
+
+    private void HandleSelect()
     {
         // Invoke the OnPoke event when a poke (select in this context) is detected
         OnPoke?.Invoke();
+        TextLog.Instance.Log("[CraftSelect] Select Poke triggered, showing popup");
     }
 
     private void OnDestroy()
@@ -31,7 +35,7 @@ public class CraftSelectPokeInteractable : MonoBehaviour
         // Clean up event subscription
         if (eventWrapper != null)
         {
-            eventWrapper.WhenSelect.RemoveListener(HandlePokeDetected);
+            eventWrapper.WhenSelect.RemoveListener(HandleSelect);
         }
     }
 }
