@@ -44,6 +44,14 @@ public class VideoView : MonoBehaviour
         videoPlayer.Play();
     }
 
+    public void PauseVideo()
+    {
+        if (videoPlayer.isPlaying)
+        {
+            videoPlayer.Pause();
+        }
+    }
+
     private void OnVideoEnd(VideoPlayer source)
     {
         TextLog.Instance.Log("Video ended. Hiding VideoPlayer.");

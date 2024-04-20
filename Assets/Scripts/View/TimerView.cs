@@ -2,17 +2,20 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System;
 
 public class TimerView : MonoBehaviour
 {
-    private TextLog textLog;
+    private TextLog textLog; // Make sure TextLog is properly implemented
     public TextMeshProUGUI timerText;
 
     [SerializeField]
     private Button timerButton;
     private float timeRemaining;
     private bool timerIsActive = false;
-    private int timerId;
+    private string timerId; // Changed from int to string
+
+    public event Action<string> OnTimerCompleted; // This already expects a string, which is good
 
     private void Start()
     {
@@ -22,7 +25,6 @@ public class TimerView : MonoBehaviour
             timerButton.gameObject.SetActive(false);
         }
     }
-
 
     private void Update()
     {
@@ -40,14 +42,13 @@ public class TimerView : MonoBehaviour
         }
     }
 
-    public void SetTimer(float time, int id)
+    public void SetTimer(float time, string timerId)
     {
         this.timeRemaining = time;
-        this.timerId = id;
+        this.timerId = timerId;
         this.timerIsActive = true;
 
-        // Optionally reset and show the timer UI here
-        UpdateTimerDisplay(time, id);
+        UpdateTimerDisplay(time, timerId);
         timerText.gameObject.SetActive(true);
         timerButton.gameObject.SetActive(false);
     }
@@ -67,7 +68,7 @@ public class TimerView : MonoBehaviour
         }
     }
 
-    private void UpdateTimerDisplay(float time, int id)
+    private void UpdateTimerDisplay(float time, string id)
     {
         if (id != this.timerId) return;
 
@@ -76,7 +77,7 @@ public class TimerView : MonoBehaviour
         timerText.text = $"{minutes:00}:{seconds:00}";
     }
 
-    private void TimerCompleted(int id)
+    private void TimerCompleted(string id)
     {
         if (id != this.timerId) return;
 

@@ -13,7 +13,6 @@ Library: /Users/vinhnuwin/MyApps/CraftCastOculus-v1/Temp/BurstOutput/tempburstli
 --assembly-defines=Assembly-CSharp;
 --assembly-defines=DOTween;
 --assembly-defines=DOTweenPro;
---assembly-defines=Meta.XR.Audio;
 --assembly-defines=Meta.XR.BuildingBlocks;
 --assembly-defines=meta.xr.mrutilitykit;
 --assembly-defines=Mono.Security;
@@ -64,7 +63,6 @@ Library: /Users/vinhnuwin/MyApps/CraftCastOculus-v1/Temp/BurstOutput/tempburstli
 --assembly-defines=Assembly-CSharp;
 --assembly-defines=DOTween;
 --assembly-defines=DOTweenPro;
---assembly-defines=Meta.XR.Audio;
 --assembly-defines=Meta.XR.BuildingBlocks;
 --assembly-defines=meta.xr.mrutilitykit;
 --assembly-defines=Mono.Security;
