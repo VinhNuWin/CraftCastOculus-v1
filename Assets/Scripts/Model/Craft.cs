@@ -10,6 +10,12 @@ public class Craft
     [JsonProperty("Craft_ID")]
     public string Craft_ID { get; set; }
 
+    [JsonProperty("Craft_Author")]
+    public string Craft_Author { get; set; }
+
+    [JsonProperty("Craft_Name")]
+    public string Craft_Name { get; set; }
+
     [JsonProperty("Craft_Details")]
     public string Craft_Details { get; set; }
 
@@ -17,19 +23,13 @@ public class Craft
     public string User_ID { get; set; }
 
     [JsonProperty("Likes")]
-    public int Likes { get; set; }
+    public int? Likes { get; set; }
 
     [JsonProperty("Shares")]
-    public int Shares { get; set; }
+    public int? Shares { get; set; }
 
     [JsonProperty("Is_Saved")]
-    public bool Is_Saved { get; set; }
-
-    [JsonProperty("Craft_Author")]
-    public string Craft_Author { get; set; }
-
-    [JsonProperty("Craft_Name")]
-    public string Craft_Name { get; set; }
+    public bool? Is_Saved { get; set; }
 
     [JsonProperty("Craft_Image")]
     public string Craft_Image { get; set; }
@@ -41,8 +41,24 @@ public class Craft
     public string Category { get; set; }
 
     [JsonProperty("Post_Date")]
-    public DateTime Post_Date { get; set; }
+    public DateTime? Post_Date { get; set; }
+
+    // Lists for Steps and Items
+    [JsonProperty("Steps")]
+    public List<Step> Steps { get; set; }
+
+    [JsonProperty("Items")]
+    public List<Item> Items { get; set; }
+
+    // Constructor
+    public Craft()
+    {
+        Steps = new List<Step>();
+        Items = new List<Item>();
+    }
 }
+
+
 
 [System.Serializable]
 public class CraftList
@@ -50,43 +66,43 @@ public class CraftList
     public List<Craft> data;
 }
 
-[System.Serializable]
-public class Step
-{
-    public string Step_ID { get; set; }
-    public string Craft_ID { get; set; }
-    public int Step_Order { get; set; }
-    public string Step_Video { get; set; }
-    public string Title { get; set; }
-    public string Step_Instruction { get; set; }
-    public int Timer_Duration { get; set; }
-}
+// [System.Serializable]
+// public class Step
+// {
+//     public string Step_ID { get; set; }
+//     public string Craft_ID { get; set; }
+//     public int Step_Order { get; set; }
+//     public string Step_Video { get; set; }
+//     public string Title { get; set; }
+//     public string Step_Instruction { get; set; }
+//     public int Timer_Duration { get; set; }
+// }
 
-[System.Serializable]
-public class StepList
-{
-    public List<Step> data;
-}
+// [System.Serializable]
+// public class StepList
+// {
+//     public List<Step> data;
+// }
 
-[System.Serializable]
-public class Item
-{
-    public string Step_ID { get; set; }
-    public string Item_ID { get; set; }
-    public string Craft_ID { get; set; }
-    public string Item_Name;
-    public string Item_Image;
-    public string Quantity;
-    public string Item_Category;
-    public string Link_To_Purchase;
-    public bool isCompleted;
-}
+// [System.Serializable]
+// public class Item
+// {
+//     public string Step_ID { get; set; }
+//     public string Item_ID { get; set; }
+//     public string Craft_ID { get; set; }
+//     public string Item_Name;
+//     public string Item_Image;
+//     public string Quantity;
+//     public string Item_Category;
+//     public string Link_To_Purchase;
+//     public bool isCompleted;
+// }
 
-[System.Serializable]
-public class ItemList
-{
-    public List<Item> items;
-}
+// [System.Serializable]
+// public class ItemList
+// {
+//     public List<Item> items;
+// }
 
 [System.Serializable]
 public class Note

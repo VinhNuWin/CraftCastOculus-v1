@@ -36,7 +36,7 @@ public class CraftUI : MonoBehaviour
             if (craftDetailsText != null) craftDetailsText.text = this.craft.Craft_Details;
             if (craftAuthor != null) craftAuthor.text = this.craft.Craft_Author;
             if (craftCategory != null) craftCategory.text = this.craft.Category;
-            if (postDate != null) postDate.text = this.craft.Post_Date.ToString("MMMM dd, yyyy");
+            // if (postDate != null) postDate.text = this.craft.Post_Date.ToString("MMMM dd, yyyy");
 
             if (!string.IsNullOrEmpty(craft.Craft_Image))
             {

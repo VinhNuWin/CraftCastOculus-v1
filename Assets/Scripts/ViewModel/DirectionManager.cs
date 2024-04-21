@@ -11,16 +11,15 @@ public class DirectionManager : MonoBehaviour
 {
     private TextLog textLog;
     public TimerViewModel timerViewModel;
-
     private Craft currentCraft;
     private Step currentStep;
     private List<Step> currentStepList;
     public TextMeshProUGUI instructionText;
     public TextMeshProUGUI titleText;
     public TextMeshProUGUI itemListText;
-    public VideoPlayer stepVideoPlayer; // Ensure this component is attached to a GameObject in the scene
-    public Button nextStepButton;
-    public Button previousStepButton;
+    public VideoPlayer stepVideoPlayer;
+    private Button nextStepButton;
+    private Button previousStepButton;
     private int currentStepIndex = 0;
 
     void Start()
@@ -69,14 +68,14 @@ public class DirectionManager : MonoBehaviour
             itemListText.text = "Items needed:\n" + string.Join("\n", items.ConvertAll(item => $"{item.Item_Name} - Quantity: {item.Quantity}"));
 
             // Manage video player
-            if (!string.IsNullOrEmpty(currentStep.Step_Video))
+            if (!string.IsNullOrEmpty(currentStep.Video_URL))
             {
                 // Determine the correct path based on the platform
                 string videoPath;
                 if (Application.platform == RuntimePlatform.Android)
-                    videoPath = "jar:file://" + Application.dataPath + "!/assets/" + System.IO.Path.GetFileName(currentStep.Step_Video);
+                    videoPath = "jar:file://" + Application.dataPath + "!/assets/" + System.IO.Path.GetFileName(currentStep.Video_URL);
                 else
-                    videoPath = System.IO.Path.Combine(Application.streamingAssetsPath, System.IO.Path.GetFileName(currentStep.Step_Video));
+                    videoPath = System.IO.Path.Combine(Application.streamingAssetsPath, System.IO.Path.GetFileName(currentStep.Video_URL));
 
                 stepVideoPlayer.source = VideoSource.Url;
                 stepVideoPlayer.url = videoPath;
@@ -95,75 +94,9 @@ public class DirectionManager : MonoBehaviour
                 TextLog.Instance.Log("No video to play for this step.");
                 stepVideoPlayer.Stop(); // Stop the video if there is no associated video
             }
-
-            // // Manage video player
-            // if (!string.IsNullOrEmpty(currentStep.Step_Video))
-            // {
-            //     // Determine the correct path based on the platform
-            //     string videoPath;
-            //     if (Application.platform == RuntimePlatform.Android)
-            //         videoPath = "jar:file://" + Application.dataPath + "!/assets/" + Path.GetFileName(currentStep.Step_Video);
-            //     else
-            //         videoPath = Path.Combine(Application.streamingAssetsPath, Path.GetFileName(currentStep.Step_Video));
-
-            //     stepVideoPlayer.source = VideoSource.Url;
-            //     stepVideoPlayer.url = videoPath;
-            //     stepVideoPlayer.errorReceived += HandleVideoError;
-
-            //     stepVideoPlayer.Prepare();
-
-            //     stepVideoPlayer.prepareCompleted += (source) =>
-            //     {
-            //         TextLog.Instance.Log("Video prepared successfully.");
-            //         stepVideoPlayer.Play();
-            //     };
-            // }
-            // else
-            // {
-            //     TextLog.Instance.Log("No video to play for this step.");
-            //     stepVideoPlayer.Stop(); // Stop the video if there is no associated video
-            // }
         }
     }
 
-
-    // private void DisplayCurrentStep()
-    // {
-    //     if (currentStepList != null && currentStepIndex < currentStepList.Count)
-    //     {
-    //         currentStep = currentStepList[currentStepIndex];
-    //         instructionText.text = currentStep.Step_Instruction;
-    //         titleText.text = currentStep.Title;
-    //         TextLog.Instance.Log($"Displaying current step: {currentStep.Step_Instruction}");
-    //         TextLog.Instance.Log($"CurrentStepIndex: {currentStepIndex}");
-    //         TextLog.Instance.Log($"Current Timer_Duration: {currentStep.Timer_Duration}");
-
-    //         // Fetch and display items for the current step
-    //         var items = ItemDataPersist.Instance.GetItemsForStep(currentCraft.Craft_ID, currentStep.Step_ID);
-    //         itemListText.text = "Items needed:\n" + string.Join("\n", items.ConvertAll(item => $"{item.Item_Name} - Quantity: {item.Quantity}"));
-
-    //         // Manage video player
-    //         if (!string.IsNullOrEmpty(currentStep.Step_Video))
-    //         {
-    //             stepVideoPlayer.source = VideoSource.Url;
-    //             stepVideoPlayer.url = currentStep.Step_Video;
-    //             stepVideoPlayer.errorReceived += HandleVideoError;
-
-    //             stepVideoPlayer.Prepare();
-
-    //             stepVideoPlayer.prepareCompleted += (source) =>
-    //             {
-    //                 TextLog.Instance.Log("Video prepared successfully.");
-    //                 stepVideoPlayer.Play();
-    //             };
-    //         }
-    //         else
-    //         {
-    //             TextLog.Instance.Log("No video to play for this step.");
-    //             stepVideoPlayer.Stop(); // Stop the video if there is no associated video
-    //         }
-    //     }
-    // }
 
     public void GoToNextStep()
     {

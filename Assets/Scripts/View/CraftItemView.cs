@@ -45,7 +45,14 @@ public class CraftItemView : MonoBehaviour
         // likesText.text = this.craft.Likes.ToString();
         // sharesText.text = this.craft.Shares.ToString();
         authorText.text = this.craft.Craft_Author;
-        dateText.text = craft.Post_Date.ToString("MMMM dd, yyyy");
+        if (craft.Post_Date.HasValue)
+        {
+            dateText.text = craft.Post_Date.Value.ToString("MMMM dd, yyyy");
+        }
+        else
+        {
+            dateText.text = "Date not available"; // Or any other placeholder text
+        }
 
         LoadAndSetImage(craft.Craft_Image, craftImage);
         LoadAndSetImage(craft.Author_Image, authorImage);

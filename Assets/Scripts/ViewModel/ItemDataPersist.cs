@@ -41,31 +41,31 @@ public class ItemDataPersist : MonoBehaviour
     {
         var demoItems = new List<Item>
         {
-            new Item { Item_ID = "1", Craft_ID = "C001", Step_ID = "1", Item_Name = "Card Base", Quantity = "1", isCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Craft Supplies" },
-            new Item { Item_ID = "2", Craft_ID = "C001", Step_ID = "2", Item_Name = "Water", Quantity = "1L", isCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Kitchen Supplies" },
-            new Item { Item_ID = "3", Craft_ID = "C002", Step_ID = "6", Item_Name = "Noodles", Quantity = "200g", isCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Food" },
-            new Item { Item_ID = "4", Craft_ID = "C002", Step_ID = "6", Item_Name = "Garlic", Quantity = "2 cloves", isCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Food" },
-            // new Item { Item_ID = "5", Craft_ID = "C003", Step_ID = "8", Item_Name = "Salmon", Quantity = "1 lb", isCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Food" },
-            // new Item { Item_ID = "6", Craft_ID = "C003", Step_ID = "8", Item_Name = "Sushi Rice", Quantity = "500g", isCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Food" },
-            new Item { Item_ID = "7", Craft_ID = "C004", Step_ID = "10", Item_Name = "Kewpie Mayo", Quantity = "2 tbsp", isCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Food" },
-            new Item { Item_ID = "8", Craft_ID = "C004", Step_ID = "11", Item_Name = "Nori Sheets", Quantity = "5", isCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Food" },
-            new Item { Item_ID = "9", Craft_ID = "C005", Step_ID = "14", Item_Name = "Card Base", Quantity = "1", isCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Craft Supplies" },
-            new Item { Item_ID = "10", Craft_ID = "C005", Step_ID = "15", Item_Name = "Water", Quantity = "1L", isCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Kitchen Supplies" },
-            new Item { Item_ID = "11", Craft_ID = "C006", Step_ID = "18", Item_Name = "Noodles", Quantity = "200g", isCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Food" },
-            new Item { Item_ID = "12", Craft_ID = "C006", Step_ID = "18", Item_Name = "Garlic", Quantity = "2 cloves", isCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Food" },
-            new Item { Item_ID = "13", Craft_ID = "C007", Step_ID = "22", Item_Name = "Salmon", Quantity = "1 lb", isCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Food" },
-            new Item { Item_ID = "14", Craft_ID = "C007", Step_ID = "24", Item_Name = "Sushi Rice", Quantity = "500g", isCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Food" },
-            new Item { Item_ID = "15", Craft_ID = "C008", Step_ID = "15", Item_Name = "Kewpie Mayo", Quantity = "2 tbsp", isCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Food" },
-            new Item { Item_ID = "16", Craft_ID = "C008", Step_ID = "16", Item_Name = "Nori Sheets", Quantity = "5", isCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Food" },
-            // new Item { Item_ID = "17", Craft_ID = "C003", Step_ID = "1", Item_Name = "Steel Ruler", Quantity = "1", isCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Leatherworking Tools" },
-            // new Item { Item_ID = "18", Craft_ID = "C003", Step_ID = "1", Item_Name = "Wax Pencil", Quantity = "1", isCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Leatherworking Tools" },
+            new Item { Item_ID = "1", Craft_ID = "C001", Step_ID = "1", Item_Name = "Card Base", Quantity = "1", IsCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Craft Supplies" },
+            new Item { Item_ID = "2", Craft_ID = "C001", Step_ID = "2", Item_Name = "Water", Quantity = "1L", IsCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Kitchen Supplies" },
+            new Item { Item_ID = "3", Craft_ID = "C002", Step_ID = "6", Item_Name = "Noodles", Quantity = "200g", IsCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Food" },
+            new Item { Item_ID = "4", Craft_ID = "C002", Step_ID = "6", Item_Name = "Garlic", Quantity = "2 cloves", IsCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Food" },
+            // new Item { Item_ID = "5", Craft_ID = "C003", Step_ID = "8", Item_Name = "Salmon", Quantity = "1 lb", IsCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Food" },
+            // new Item { Item_ID = "6", Craft_ID = "C003", Step_ID = "8", Item_Name = "Sushi Rice", Quantity = "500g", IsCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Food" },
+            new Item { Item_ID = "7", Craft_ID = "C004", Step_ID = "10", Item_Name = "Kewpie Mayo", Quantity = "2 tbsp", IsCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Food" },
+            new Item { Item_ID = "8", Craft_ID = "C004", Step_ID = "11", Item_Name = "Nori Sheets", Quantity = "5", IsCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Food" },
+            new Item { Item_ID = "9", Craft_ID = "C005", Step_ID = "14", Item_Name = "Card Base", Quantity = "1", IsCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Craft Supplies" },
+            new Item { Item_ID = "10", Craft_ID = "C005", Step_ID = "15", Item_Name = "Water", Quantity = "1L", IsCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Kitchen Supplies" },
+            new Item { Item_ID = "11", Craft_ID = "C006", Step_ID = "18", Item_Name = "Noodles", Quantity = "200g", IsCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Food" },
+            new Item { Item_ID = "12", Craft_ID = "C006", Step_ID = "18", Item_Name = "Garlic", Quantity = "2 cloves", IsCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Food" },
+            new Item { Item_ID = "13", Craft_ID = "C007", Step_ID = "22", Item_Name = "Salmon", Quantity = "1 lb", IsCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Food" },
+            new Item { Item_ID = "14", Craft_ID = "C007", Step_ID = "24", Item_Name = "Sushi Rice", Quantity = "500g", IsCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Food" },
+            new Item { Item_ID = "15", Craft_ID = "C008", Step_ID = "15", Item_Name = "Kewpie Mayo", Quantity = "2 tbsp", IsCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Food" },
+            new Item { Item_ID = "16", Craft_ID = "C008", Step_ID = "16", Item_Name = "Nori Sheets", Quantity = "5", IsCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Food" },
+            // new Item { Item_ID = "17", Craft_ID = "C003", Step_ID = "1", Item_Name = "Steel Ruler", Quantity = "1", IsCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Leatherworking Tools" },
+            // new Item { Item_ID = "18", Craft_ID = "C003", Step_ID = "1", Item_Name = "Wax Pencil", Quantity = "1", IsCompleted = false, Link_To_Purchase = "www.example.com", Item_Category = "Leatherworking Tools" },
             new Item {
     Item_ID = "3",
     Craft_ID = "C003",
     Step_ID = "1",
     Item_Name = "Firm Tofu",
     Quantity = "16 oz",
-    isCompleted = false,
+    IsCompleted = false,
     Link_To_Purchase = "www.example.com",
     Item_Category = "Kitchen Supplies"
 },
@@ -75,7 +75,7 @@ new Item {
     Step_ID = "2",
     Item_Name = "Green Onion",
     Quantity = "3 stalks",
-    isCompleted = false,
+    IsCompleted = false,
     Link_To_Purchase = "www.example.com",
     Item_Category = "Vegetables"
 },
@@ -85,7 +85,7 @@ new Item {
     Step_ID = "5",
     Item_Name = "Cornstarch",
     Quantity = "6 tbsp",
-    isCompleted = false,
+    IsCompleted = false,
     Link_To_Purchase = "www.example.com",
     Item_Category = "Kitchen Supplies"
 },
@@ -114,6 +114,7 @@ new Item {
 
     public void AddOrUpdateItem(Item item)
     {
+        TextLog.Instance.Log("[IDP] Adding Or Updating Item");
         if (!string.IsNullOrWhiteSpace(item.Craft_ID))
         {
             if (!ItemsByCraftID.ContainsKey(item.Craft_ID))

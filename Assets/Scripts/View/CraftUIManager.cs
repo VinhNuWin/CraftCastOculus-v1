@@ -56,7 +56,6 @@ public class CraftUIManager : MonoBehaviour
             TextLog.Instance.Log("[CraftUIMan] OnCraftSelected - No craft selected or craft is null");
         }
 
-        PopupManager.Instance.ShowPopup();
         TextLog.Instance.Log("[CraftUIMan]Popup isOpen: true");
     }
 

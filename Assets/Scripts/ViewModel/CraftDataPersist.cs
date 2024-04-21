@@ -51,6 +51,7 @@ public class CraftDataPersist : MonoBehaviour
     {
         if (craft != null && !string.IsNullOrWhiteSpace(craft.Craft_ID))
         {
+            TextLog.Instance.Log("[CDP] Adding Or Updating Craft");
             Crafts[craft.Craft_ID] = craft;
         }
 

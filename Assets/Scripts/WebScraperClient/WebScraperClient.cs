@@ -1,133 +1,120 @@
 using UnityEngine;
+using System;
 using System.Collections;
-using System.Net.Http;
+// using System.Net.Http;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+using UnityEngine.Networking;
+
+public class Response
+{
+    public string chatResponse;
+}
+
+public class CraftResponse
+{
+    public Craft Craft;
+}
 
 public class WebScraperClient : MonoBehaviour
 {
+    private TextLog textLog;
     // URL of your web scraper server
-    private string baseUrl = "http://yourserver.com/api/scrape?url=";
-
-    // HttpClient is intended to be instantiated once and re-used throughout the life of an application.
-    private static readonly HttpClient client = new HttpClient();
+    private string baseUrl = "http://localhost:3000/scrape?url=";
 
     async void Start()
     {
-        // Example URL to scrape
-        string targetUrl = "http://example.com";
-        await FetchAndProcessData(targetUrl);
+        TextLog.Instance.Log("Starting WebScraper Script");
+
+        string targetUrl = "https://skinnyspatula.com/keto-beef-stroganoff/";
+        StartCoroutine(FetchAndProcessData(targetUrl));
     }
 
-    async Task FetchAndProcessData(string url)
+    IEnumerator FetchAndProcessData(string url)
     {
-        try
+        string fullUrl = baseUrl + UnityWebRequest.EscapeURL(url);
+        using (UnityWebRequest request = UnityWebRequest.Get(fullUrl))
         {
-            string fullUrl = baseUrl + UnityWebRequest.EscapeURL(url);
-            HttpResponseMessage response = await client.GetAsync(fullUrl);
-            response.EnsureSuccessStatusCode();
-            string responseBody = await response.Content.ReadAsStringAsync();
+            yield return request.SendWebRequest();
 
-            // Assuming your JSON structure from the scraper includes crafts, steps, and items
-            // Deserialize JSON response
-            var result = JsonConvert.DeserializeObject<DataContainer>(responseBody);
-
-            if (result != null)
+            if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
             {
-                if (result.Crafts != null && result.Crafts.Count > 0)
+                TextLog.Instance.Log("Error: " + request.error);
+            }
+            else
+            {
+                try
                 {
-                    foreach (Craft craft in result.Crafts)
-                    {
-                        CraftDataPersist.Instance.AddOrUpdateCraft(craft);
-                        Debug.Log("Updated Craft: " + craft.Craft_Name);
-                    }
-                }
+                    string responseBody = request.downloadHandler.text;
+                    // TextLog.Instance.Log("Response Body: " + responseBody);
 
-                if (result.Steps != null && result.Steps.Count > 0)
-                {
-                    foreach (Step step in result.Steps)
+                    Response response = JsonConvert.DeserializeObject<Response>(responseBody);
+                    if (response == null || string.IsNullOrEmpty(response.chatResponse))
                     {
-                        StepDataPersist.Instance.AddOrUpdateStep(step);
-                        Debug.Log("Updated Step: " + step.Title);
+                        TextLog.Instance.Log("Response or chatResponse is null");
+                        yield break; ; // Exit if response is null to prevent further errors
                     }
-                }
 
-                if (result.Items != null && result.Items.Count > 0)
-                {
-                    foreach (Item item in result.Items)
+                    // Now parse the inner JSON string contained in 'chatResponse':
+                    CraftResponse craftResponse = JsonConvert.DeserializeObject<CraftResponse>(response.chatResponse.Replace("```json\n", "").Replace("\n```", ""));
+                    if (craftResponse == null || craftResponse.Craft == null)
                     {
-                        ItemDataPersist.Instance.AddOrUpdateItem(item);
-                        Debug.Log("Updated Item: " + item.Item_Name);
+                        TextLog.Instance.Log("No craft data found in the response.");
+                        yield break; ; // Exit if craftResponse is null to prevent further errors
                     }
+
+                    // Now you can access the Craft object and its properties:
+                    TextLog.Instance.Log("Craft Name: " + craftResponse.Craft.Craft_Name);
+                    ProcessCraft(craftResponse.Craft);
+                }
+                catch (Exception e)
+                {
+                    TextLog.Instance.Log("Exception Caught!");
+                    TextLog.Instance.Log("Message: " + e.Message);
                 }
             }
         }
-        catch (HttpRequestException e)
-        {
-            Debug.LogError("\nException Caught!");
-            Debug.LogError("Message :{0} " + e.Message);
-        }
     }
 
+    private void ProcessCraft(Craft craft)
+    {
+        TextLog.Instance.Log("Processing Craft: " + craft.Craft_Name);
+        CraftDataPersist.Instance.AddOrUpdateCraft(craft);
 
-    // void UpdateSelectedCraft(string json)
-    // {
-    //     Craft craft = JsonUtility.FromJson<Craft>(json);
-    //     if (craft != null)
-    //     {
-    //         CraftDataPersist.Instance.SelectedCraft = craft;
-    //     }
-    //     else
-    //     {
-    //         TextLog.Instance.Log("Failed to parse craft data from JSON.");
-    //     }
-    // }
+        if (craft.Steps == null)
+        {
+            TextLog.Instance.Log("Steps list is null.");
+        }
+        else
+        {
+            foreach (Step step in craft.Steps)
+            {
+                if (step == null)
+                {
+                    TextLog.Instance.Log("A step in Steps list is null.");
+                    continue;
+                }
+                StepDataPersist.Instance.AddOrUpdateStep(step);
+            }
+        }
+
+        if (craft.Items == null)
+        {
+            TextLog.Instance.Log("Items list is null.");
+        }
+        else
+        {
+            foreach (Item item in craft.Items)
+            {
+                if (item == null)
+                {
+                    TextLog.Instance.Log("An item in Items list is null.");
+                    continue;
+                }
+                ItemDataPersist.Instance.AddOrUpdateItem(item);
+            }
+        }
+        CraftDataPersist.Instance.SelectedCraft = craft;
+    }
 }
-
-
-// using System.Collections;
-// using UnityEngine;
-// using UnityEngine.Networking;
-
-// public class WebScraperClient : MonoBehaviour
-// {
-//     private TextLog textLog;
-
-//     string baseURL = "http://localhost:3000/scrape?url=";
-
-//     // Start is called before the first frame update
-//     void Start()
-//     {
-//         StartCoroutine(ScrapeWebsite("https://skinnyspatula.com/keto-beef-stroganoff/"));
-//     }
-
-//     IEnumerator ScrapeWebsite(string url)
-//     {
-//         UnityWebRequest request = UnityWebRequest.Get(baseURL + System.Uri.EscapeUriString(url));
-//         yield return request.SendWebRequest();
-
-//         if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
-//         {
-//             TextLog.Instance.Log(request.error);
-//         }
-//         else
-//         {
-//             TextLog.Instance.Log(request.downloadHandler.text);
-//             UpdateSelectedCraft(request.downloadHandler.text);
-//             Debug.Log(request.downloadHandler.text);
-//         }
-//     }
-
-//     void UpdateSelectedCraft(string json)
-//     {
-//         Craft craft = JsonUtility.FromJson<Craft>(json);
-//         if (craft != null)
-//         {
-//             CraftDataPersist.Instance.SelectedCraft = craft;
-//         }
-//         else
-//         {
-//             TextLog.Instance.Log("Failed to parse craft data from JSON.");
-//         }
-//     }
-// }
