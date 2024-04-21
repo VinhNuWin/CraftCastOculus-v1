@@ -111,4 +111,17 @@ new Item {
         }
         return new List<Item>(); // Return an empty list if no items found
     }
+
+    public void AddOrUpdateItem(Item item)
+    {
+        if (!string.IsNullOrWhiteSpace(item.Craft_ID))
+        {
+            if (!ItemsByCraftID.ContainsKey(item.Craft_ID))
+            {
+                ItemsByCraftID[item.Craft_ID] = new List<Item>();
+            }
+            ItemsByCraftID[item.Craft_ID].Add(item);
+        }
+    }
+
 }

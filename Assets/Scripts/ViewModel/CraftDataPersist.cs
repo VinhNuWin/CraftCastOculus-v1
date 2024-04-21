@@ -49,10 +49,11 @@ public class CraftDataPersist : MonoBehaviour
     // Method to add or update Crafts in the dictionary
     public void AddOrUpdateCraft(Craft craft)
     {
-        if (Crafts.ContainsKey(craft.Craft_ID))
+        if (craft != null && !string.IsNullOrWhiteSpace(craft.Craft_ID))
         {
             Crafts[craft.Craft_ID] = craft;
         }
+
         else
         {
             Crafts.Add(craft.Craft_ID, craft);

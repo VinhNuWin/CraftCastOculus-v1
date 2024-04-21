@@ -157,4 +157,17 @@ new Step {
         }
         return null; // or return an empty list if that's preferable
     }
+
+    public void AddOrUpdateStep(Step step)
+    {
+        if (!string.IsNullOrWhiteSpace(step.Craft_ID))
+        {
+            if (!StepsByCraftID.ContainsKey(step.Craft_ID))
+            {
+                StepsByCraftID[step.Craft_ID] = new List<Step>();
+            }
+            StepsByCraftID[step.Craft_ID].Add(step);
+        }
+    }
+
 }
