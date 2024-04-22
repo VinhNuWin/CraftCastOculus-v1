@@ -1,7 +1,8 @@
 using UnityEngine;
 using System;
 using System.Collections;
-// using System.Net.Http;
+using UnityEngine.UI;
+using TMPro;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
@@ -20,14 +21,29 @@ public class CraftResponse
 public class WebScraperClient : MonoBehaviour
 {
     private TextLog textLog;
-    // URL of your web scraper server
+    public TMP_InputField userInputField;
+    public Button pokeButton;
     private string baseUrl = "http://localhost:3000/scrape?url=";
 
-    async void Start()
+    void Start()
     {
-        TextLog.Instance.Log("Starting WebScraper Script");
+        // Ensure the button is not interactable until there is some input
+        pokeButton.interactable = false;
 
-        string targetUrl = "https://skinnyspatula.com/keto-beef-stroganoff/";
+        // Add listeners
+        userInputField.onValueChanged.AddListener(delegate { ValidateInput(); });
+        pokeButton.onClick.AddListener(delegate { UserInputReceived(userInputField.text); });
+    }
+
+    private void ValidateInput()
+    {
+        // Check if the input field is not empty
+        pokeButton.interactable = !string.IsNullOrEmpty(userInputField.text);
+    }
+
+    public void UserInputReceived(string userInput)
+    {
+        string targetUrl = userInput;
         StartCoroutine(FetchAndProcessData(targetUrl));
     }
 

@@ -14,14 +14,14 @@ public class CraftUI : MonoBehaviour
     public Sprite defaultImageSprite;
     public Sprite defaultErrorSprite;
     [SerializeField]
-    private CraftSelectPokeInteractable craftSelectPokeInteractable;
+    private CraftPokeInteractable craftSelectPokeInteractable;
 
     // void Start()
     // {
-    //     craftSelectPokeInteractable = GetComponentInChildren<CraftSelectPokeInteractable>(true);
+    //     craftSelectPokeInteractable = GetComponentInChildren<CraftPokeInteractable>(true);
     //     if (craftSelectPokeInteractable == null)
     //     {
-    //         Debug.LogError("CraftSelectPokeInteractable not found on the GameObject or its children.");
+    //         Debug.LogError("CraftPokeInteractable not found on the GameObject or its children.");
     //     }
     // }
 
@@ -53,7 +53,7 @@ public class CraftUI : MonoBehaviour
                 if (authorImage != null) authorImage.sprite = defaultImageSprite; // Set to default if no author image provided
             }
 
-            craftSelectPokeInteractable = GetComponentInChildren<CraftSelectPokeInteractable>(true);
+            craftSelectPokeInteractable = GetComponentInChildren<CraftPokeInteractable>(true);
 
             if (craftSelectPokeInteractable != null)
             {

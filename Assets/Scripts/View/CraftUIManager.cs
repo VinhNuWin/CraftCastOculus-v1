@@ -8,7 +8,8 @@ public class CraftUIManager : MonoBehaviour
     public ItemUI itemUI; // Assuming this is a single UI element for displaying an item.
     public CraftUI craftUI; // UI component to display craft details.
     private Craft currentCraft;
-    public GameObject detailPanel;
+    public CanvasGroup selectedCraftWindow;
+    public FadeInEffect fadeInEffect;
     private List<Step> currentCraftSteps;
     private List<Item> currentCraftItems;
     public static CraftUIManager Instance { get; private set; }
@@ -25,6 +26,10 @@ public class CraftUIManager : MonoBehaviour
         else if (Instance != this)
         {
             Destroy(gameObject);
+        }
+        if (fadeInEffect == null)
+        {
+            TextLog.Instance.Log("FadeInEffect is not assigned in the Inspector");
         }
     }
 
@@ -50,6 +55,12 @@ public class CraftUIManager : MonoBehaviour
             UpdateUIWithSteps(steps); // Updated method to display steps without prefabs.
             var items = ItemDataPersist.Instance.GetItemsForCraft(selectedCraft.Craft_ID);
             UpdateUIWithItems(items); // Updated method to display items without prefabs.
+
+            if (fadeInEffect != null)
+            {
+                fadeInEffect.FadeInUIElement();
+                TextLog.Instance.Log("Calling fade in element");
+            }
         }
         else
         {

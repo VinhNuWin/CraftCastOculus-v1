@@ -2,7 +2,7 @@ using Oculus.Interaction;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class CraftSelectPokeInteractable : MonoBehaviour, IPokeInteractable
+public class CraftPokeInteractable : MonoBehaviour, IPokeInteractable
 {
     public UnityEvent OnPoke;
 
