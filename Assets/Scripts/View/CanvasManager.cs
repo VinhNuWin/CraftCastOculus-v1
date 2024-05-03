@@ -16,11 +16,6 @@ public class CanvasManager : MonoBehaviour
         DOTween.Init();
         TextLog.Instance.Log("[CM] initialized");
         CraftDataPersist.Instance.OnCraftSelected += HandleCraftSelected;
-
-        // craftViewModel.OnCraftSelected += (craft) =>
-        // {
-        //     TextLog.Instance.Log($"Inline subscription test: Craft selected with ID {craft.Craft_ID}");
-        // };
     }
 
     private void OnDestroy()
@@ -34,7 +29,6 @@ public class CanvasManager : MonoBehaviour
     private void HandleCraftSelected(Craft selectedCraft)
     {
         TextLog.Instance.Log("[CM] HandleCraftSelected initialized");
-        // DimPrimaryCanvas(true);
         ShowCraftDetailsOverlay(true);
     }
 

@@ -68,4 +68,20 @@ public class CraftDataPersist : MonoBehaviour
             AddOrUpdateCraft(craft);
         }
     }
+
+    public void ProcessWebSocketData(string json)
+    {
+        try
+        {
+            Craft craft = JsonUtility.FromJson<Craft>(json);
+            AddOrUpdateCraft(craft);
+            TextLog.Instance.Log($"Processed and stored craft from WebSocket: {craft.Craft_Name}");
+            // Optionally, change the selected craft or trigger any additional actions
+            SelectedCraft = craft;
+        }
+        catch (Exception ex)
+        {
+            TextLog.Instance.Log($"Error processing WebSocket data: {ex.Message}");
+        }
+    }
 }

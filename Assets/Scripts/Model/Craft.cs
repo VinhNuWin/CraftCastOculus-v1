@@ -59,50 +59,12 @@ public class Craft
 }
 
 
-
 [System.Serializable]
 public class CraftList
 {
     public List<Craft> data;
 }
 
-// [System.Serializable]
-// public class Step
-// {
-//     public string Step_ID { get; set; }
-//     public string Craft_ID { get; set; }
-//     public int Step_Order { get; set; }
-//     public string Step_Video { get; set; }
-//     public string Title { get; set; }
-//     public string Step_Instruction { get; set; }
-//     public int Timer_Duration { get; set; }
-// }
-
-// [System.Serializable]
-// public class StepList
-// {
-//     public List<Step> data;
-// }
-
-// [System.Serializable]
-// public class Item
-// {
-//     public string Step_ID { get; set; }
-//     public string Item_ID { get; set; }
-//     public string Craft_ID { get; set; }
-//     public string Item_Name;
-//     public string Item_Image;
-//     public string Quantity;
-//     public string Item_Category;
-//     public string Link_To_Purchase;
-//     public bool isCompleted;
-// }
-
-// [System.Serializable]
-// public class ItemList
-// {
-//     public List<Item> items;
-// }
 
 [System.Serializable]
 public class Note

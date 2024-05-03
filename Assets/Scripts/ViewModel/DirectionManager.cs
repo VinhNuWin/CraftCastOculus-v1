@@ -39,17 +39,18 @@ public class DirectionManager : MonoBehaviour
     //     previousStepButton.onClick.RemoveListener(GoToPreviousStep);
     // }
 
-    void InitializeDirection()
+    public void InitializeDirection()
     {
-        currentCraft = CraftDataPersist.Instance?.SelectedCraft;
-        if (currentCraft != null)
-        {
-            currentStepList = StepDataPersist.Instance.GetStepsForCraft(currentCraft.Craft_ID);
-            if (currentStepList.Count > 0)
-            {
-                DisplayCurrentStep();
-            }
-        }
+        DisplayCurrentStep();
+        // currentCraft = CraftDataPersist.Instance?.SelectedCraft;
+        // if (currentCraft != null)
+        // {
+        //     currentStepList = StepDataPersist.Instance.GetStepsForCraft(currentCraft.Craft_ID);
+        //     if (currentStepList.Count > 0)
+        //     {
+        //         DisplayCurrentStep();
+        //     }
+        // }
     }
 
     private void DisplayCurrentStep()
