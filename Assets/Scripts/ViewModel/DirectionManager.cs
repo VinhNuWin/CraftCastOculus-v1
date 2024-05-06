@@ -24,20 +24,40 @@ public class DirectionManager : MonoBehaviour
 
     void Start()
     {
-        InitializeDirection();
+        // InitializeDirection();
+        // Subscribe to the OnCraftSelected event
+        CraftDataPersist.Instance.OnCraftSelected += HandleCraftSelected;
+
+        // Initialize directions if the current scene is "CraftScene"
+        if (SceneManager.GetActiveScene().name == "CraftScene")
+        {
+            InitializeDirection();
+        }
     }
 
-    // void OnEnable()
-    // {
-    //     nextStepButton.onClick.AddListener(GoToNextStep);
-    //     previousStepButton.onClick.AddListener(GoToPreviousStep);
-    // }
+    void OnDisable()
+    {
+        // Unsubscribe to prevent memory leak or calling on destroyed object
+        CraftDataPersist.Instance.OnCraftSelected -= HandleCraftSelected;
+    }
 
-    // void OnDestroy()
-    // {
-    //     nextStepButton.onClick.RemoveListener(GoToNextStep);
-    //     previousStepButton.onClick.RemoveListener(GoToPreviousStep);
-    // }
+    void OnDestroy()
+    {
+        // Unsubscribe here as well to cover all bases
+        CraftDataPersist.Instance.OnCraftSelected -= HandleCraftSelected;
+    }
+
+    private void HandleCraftSelected(Craft selectedCraft)
+    {
+        currentCraft = selectedCraft;
+        currentStepList = StepDataPersist.Instance.GetStepsForCraft(currentCraft.Craft_ID);
+
+        // Check again if the current scene is "CraftScene" when a craft is selected
+        if (SceneManager.GetActiveScene().name == "CraftScene")
+        {
+            InitializeDirection();
+        }
+    }
 
     public void InitializeDirection()
     {

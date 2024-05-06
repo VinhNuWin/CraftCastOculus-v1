@@ -158,17 +158,49 @@ new Step {
         return null; // or return an empty list if that's preferable
     }
 
-    public void AddOrUpdateStep(Step step)
+    public void AddOrUpdateStep(Step newStep)
     {
         TextLog.Instance.Log("[SDP] Adding Or Updating Step");
-        if (!string.IsNullOrWhiteSpace(step.Craft_ID))
+        if (!string.IsNullOrWhiteSpace(newStep.Craft_ID))
         {
-            if (!StepsByCraftID.ContainsKey(step.Craft_ID))
+            // Retrieve the list of steps for the given Craft_ID, or create it if it doesn't exist
+            if (!StepsByCraftID.TryGetValue(newStep.Craft_ID, out var stepsList))
             {
-                StepsByCraftID[step.Craft_ID] = new List<Step>();
+                stepsList = new List<Step>();
+                StepsByCraftID[newStep.Craft_ID] = stepsList;
             }
-            StepsByCraftID[step.Craft_ID].Add(step);
+
+            // Check if the step already exists
+            var existingStep = stepsList.Find(step => step.Step_ID == newStep.Step_ID);
+            if (existingStep != null)
+            {
+                // Update the existing step
+                existingStep.Step_Order = newStep.Step_Order;
+                existingStep.Title = newStep.Title;
+                existingStep.Step_Instruction = newStep.Step_Instruction;
+                existingStep.Timer_Duration = newStep.Timer_Duration;
+                existingStep.Image_URL = newStep.Image_URL;
+                existingStep.Video_URL = newStep.Video_URL;
+                // Add more fields as necessary
+            }
+            else
+            {
+                // Add the new step
+                stepsList.Add(newStep);
+            }
         }
     }
+    // public void AddOrUpdateStep(Step step)
+    // {
+    //     TextLog.Instance.Log("[SDP] Adding Or Updating Step");
+    //     if (!string.IsNullOrWhiteSpace(step.Craft_ID))
+    //     {
+    //         if (!StepsByCraftID.ContainsKey(step.Craft_ID))
+    //         {
+    //             StepsByCraftID[step.Craft_ID] = new List<Step>();
+    //         }
+    //         StepsByCraftID[step.Craft_ID].Add(step);
+    //     }
+    // }
 
 }

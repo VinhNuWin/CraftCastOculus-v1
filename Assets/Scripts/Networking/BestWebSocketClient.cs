@@ -4,12 +4,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System.Text.RegularExpressions;
 using Best.WebSockets;
+using Best.HTTP.Shared.PlatformSupport.Memory;
+using Newtonsoft.Json;
+using System.Text.RegularExpressions;
 
 public class BestWebSocketClient : MonoBehaviour
 {
     private WebSocket webSocket;
     private Queue<string> messageQueue = new Queue<string>();
+    private string rawJsonData;
+
 
     void Start()
     {
@@ -37,29 +43,138 @@ public class BestWebSocketClient : MonoBehaviour
     private void OnOpen(WebSocket webSocket)
     {
         TextLog.Instance.Log("Connection opened!");
-        // Send a message to the server.
-        webSocket.Send("Hello Server from unity!");
     }
+
+    // private void OnMessageReceived(WebSocket webSocket, string message)
+    // {
+    //     MainThreadDispatcher.Enqueue(() =>
+    //     {
+    //         // string jsonData = Encoding.UTF8.GetString(message);
+    //         TextLog.Instance.Log("OnMessageReceived " + message);
+    //     });
+    // }
 
     private void OnMessageReceived(WebSocket webSocket, string message)
     {
         MainThreadDispatcher.Enqueue(() =>
         {
-            TextLog.Instance.Log("Connection opened!" + message);
+            try
+            {
+                // Attempt to parse the JSON string to extract the binary data
+                var jsonObject = JsonUtility.FromJson<Buffer>(message);
+                if (jsonObject.type == "Buffer" && jsonObject.data != null)
+                {
+                    // Convert the integer array back to byte array
+                    byte[] bytes = new byte[jsonObject.data.Length];
+                    for (int i = 0; i < jsonObject.data.Length; i++)
+                    {
+                        bytes[i] = (byte)jsonObject.data[i];
+                    }
+
+                    // Now you have the original byte array and can handle it accordingly
+                    string jsonData = Encoding.UTF8.GetString(bytes);
+                    // TextLog.Instance.Log("Processed Binary Data: " + jsonData);
+                    Debug.Log("Processed Binary Data: " + jsonData);
+                    ProcessCraftData(jsonData);
+                }
+            }
+            catch (Exception ex)
+            {
+                TextLog.Instance.Log("Failed to process message: " + ex.Message);
+            }
         });
     }
+    private string RemoveCommentsFromJson(string jsonData)
+    {
+        // Regex to find patterns that start with // and end with milliseconds
+        string pattern = @"//.*?milliseconds";
+        // Replace matched patterns with an empty string
+        string cleanedJson = Regex.Replace(jsonData, pattern, string.Empty, RegexOptions.Singleline);
+        return cleanedJson;
+    }
 
+    private void ProcessCraftData(string jsonData)
+    {
+        // First remove comments from the JSON string
+        string cleanJsonData = RemoveCommentsFromJson(jsonData);
 
-    // private void OnBinaryMessageReceived(WebSocket webSocket, BufferSegment buffer)
+        Debug.Log("Cleaned JSON Data: " + cleanJsonData);
+        try
+        {
+            ChatResponse response = JsonUtility.FromJson<ChatResponse>(cleanJsonData);
+            if (response != null && !string.IsNullOrEmpty(response.chatResponse))
+            {
+                Debug.Log("Inner JSON Data: " + response.chatResponse);
+                Craft craft = JsonUtility.FromJson<Craft>(response.chatResponse);
+
+                if (craft != null)
+                {
+                    if (CraftDataPersist.Instance != null)
+                    {
+                        CraftDataPersist.Instance.ProcessWebSocketData(craft);
+                    }
+                    else
+                    {
+                        Debug.LogError("CraftDataPersist.Instance is not initialized");
+                    }
+                }
+                else
+                {
+                    Debug.LogError("Failed to parse Craft from chatResponse");
+                }
+            }
+            else
+            {
+                Debug.LogError("Failed to deserialize ChatResponse or chatResponse is empty");
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError("Error processing craft data: " + ex.Message);
+        }
+    }
+
+    // private void ProcessCraftData(string jsonData)
     // {
-    //     Debug.Log("Binary Message received from server. Length: " + buffer.Length);
-
-    //     using (var stream = System.IO.File.OpenWrite("path\to\file"))
+    //     Debug.Log("Received JSON Data: " + jsonData);
+    //     try
     //     {
-    //         // ✅ Good:
-    //         stream.Write(buffer.Data, buffer.Offset, buffer.Count);
+    //         ChatResponse response = JsonUtility.FromJson<ChatResponse>(jsonData);
+    //         if (response != null && !string.IsNullOrEmpty(response.chatResponse))
+    //         {
+    //             Debug.Log("Inner JSON Data: " + response.chatResponse);
+    //             // Now parse the inner JSON string into the Craft object
+    //             Craft craft = JsonUtility.FromJson<Craft>(response.chatResponse);
+
+    //             if (craft != null)
+    //             {
+    //                 if (CraftDataPersist.Instance != null)
+    //                 {
+    //                     CraftDataPersist.Instance.ProcessWebSocketData(craft);
+    //                     // ProcessStepsData(craft.Steps);
+    //                     // ProcessItemsData(craft.Items);
+    //                 }
+    //                 else
+    //                 {
+    //                     Debug.LogError("CraftDataPersist.Instance is not initialized");
+    //                 }
+    //             }
+    //             else
+    //             {
+    //                 Debug.LogError("Craft_Name is null");
+    //             }
+    //         }
+    //         else
+    //         {
+    //             Debug.LogError("Failed to deserialize ChatResponse or chatResponse is empty");
+    //         }
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         Debug.LogError("Error processing craft data: " + ex.Message);
     //     }
     // }
+
 
 
     private void OnWebSocketClosed(WebSocket webSocket, WebSocketStatusCodes code, string message)
@@ -86,4 +201,16 @@ public class BestWebSocketClient : MonoBehaviour
             webSocket = null;
         }
     }
+}
+
+[Serializable]
+public class Buffer
+{
+    public string type;
+    public int[] data;
+}
+
+public class ChatResponse
+{
+    public string chatResponse;
 }

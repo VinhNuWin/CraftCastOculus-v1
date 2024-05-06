@@ -51,15 +51,23 @@ public class CraftDataPersist : MonoBehaviour
     {
         if (craft != null && !string.IsNullOrWhiteSpace(craft.Craft_ID))
         {
-            TextLog.Instance.Log("[CDP] Adding Or Updating Craft");
-            Crafts[craft.Craft_ID] = craft;
+            if (Crafts.ContainsKey(craft.Craft_ID))
+            {
+                TextLog.Instance.Log("[CDP] Updating Craft");
+                Crafts[craft.Craft_ID] = craft;
+            }
+            else
+            {
+                TextLog.Instance.Log("[CDP] Adding New Craft");
+                Crafts.Add(craft.Craft_ID, craft);
+            }
         }
-
         else
         {
-            Crafts.Add(craft.Craft_ID, craft);
+            TextLog.Instance.Log("[CDP] Invalid craft or Craft_ID is null/empty, not added or updated.");
         }
     }
+
 
     public void LoadCrafts(IEnumerable<Craft> loadedCrafts)
     {
@@ -69,19 +77,40 @@ public class CraftDataPersist : MonoBehaviour
         }
     }
 
-    public void ProcessWebSocketData(string json)
+    public void ProcessWebSocketData(Craft craft)
     {
         try
         {
-            Craft craft = JsonUtility.FromJson<Craft>(json);
-            AddOrUpdateCraft(craft);
+            AddOrUpdateCraft(craft);  // Assumes this method updates the craft dictionary but does not trigger the event
+            ProcessStepsData(craft.Steps);
+            ProcessItemsData(craft.Items);
+
+            // Trigger the OnCraftSelected event only after all data is processed
+            if (OnCraftSelected != null)
+            {
+                // Assigns selectedCraft and Invokes OnCraftSelected
+                SelectedCraft = craft;
+            }
             TextLog.Instance.Log($"Processed and stored craft from WebSocket: {craft.Craft_Name}");
-            // Optionally, change the selected craft or trigger any additional actions
-            SelectedCraft = craft;
         }
         catch (Exception ex)
         {
             TextLog.Instance.Log($"Error processing WebSocket data: {ex.Message}");
+        }
+    }
+
+    private void ProcessStepsData(Step[] steps)
+    {
+        foreach (Step step in steps)
+        {
+            StepDataPersist.Instance.AddOrUpdateStep(step);
+        }
+    }
+    private void ProcessItemsData(Item[] items)
+    {
+        foreach (Item item in items)
+        {
+            ItemDataPersist.Instance.AddOrUpdateItem(item);
         }
     }
 }

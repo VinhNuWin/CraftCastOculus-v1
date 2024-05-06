@@ -7,27 +7,19 @@ using System.IO;
 [System.Serializable]
 public class Step
 {
-    [JsonProperty("Step_ID")]
-    public string Step_ID { get; set; }
+    public string Step_ID;
 
-    [JsonProperty("Craft_ID")]
-    public string Craft_ID { get; set; }
+    public string Craft_ID;
 
-    [JsonProperty("Step_Order")]
-    public int Step_Order { get; set; }
+    public int Step_Order;
 
-    [JsonProperty("Title")]
-    public string Title { get; set; }
+    public string Title;
 
-    [JsonProperty("Step_Instruction")]
-    public string Step_Instruction { get; set; }
+    public string Step_Instruction;
 
-    [JsonProperty("Timer_Duration")]
-    public int Timer_Duration { get; set; }
+    public int Timer_Duration;
 
-    [JsonProperty("Image_URL")]
-    public string Image_URL { get; set; }
+    public string Image_URL;
 
-    [JsonProperty("Video_URL")]
-    public string Video_URL { get; set; }  // Assuming there might be a video URL
+    public string Video_URL;
 }

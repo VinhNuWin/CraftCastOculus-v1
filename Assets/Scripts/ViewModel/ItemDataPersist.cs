@@ -112,17 +112,48 @@ new Item {
         return new List<Item>(); // Return an empty list if no items found
     }
 
-    public void AddOrUpdateItem(Item item)
+    public void AddOrUpdateItem(Item newItem)
     {
         TextLog.Instance.Log("[IDP] Adding Or Updating Item");
-        if (!string.IsNullOrWhiteSpace(item.Craft_ID))
+        if (!string.IsNullOrWhiteSpace(newItem.Craft_ID))
         {
-            if (!ItemsByCraftID.ContainsKey(item.Craft_ID))
+            if (!ItemsByCraftID.TryGetValue(newItem.Craft_ID, out var itemsList))
             {
-                ItemsByCraftID[item.Craft_ID] = new List<Item>();
+                itemsList = new List<Item>();
+                ItemsByCraftID[newItem.Craft_ID] = itemsList;
             }
-            ItemsByCraftID[item.Craft_ID].Add(item);
+            var existingItem = itemsList.Find(item => item.Item_ID == newItem.Item_ID);
+            if (existingItem != null)
+            {
+                // Update existing item details
+                existingItem.Item_Name = newItem.Item_Name;
+                existingItem.Quantity = newItem.Quantity;
+                existingItem.IsCompleted = newItem.IsCompleted;
+                existingItem.Link_To_Purchase = newItem.Link_To_Purchase;
+                existingItem.Item_Category = newItem.Item_Category;
+                existingItem.Item_Image = newItem.Item_Image;
+                // Add more fields as necessary
+            }
+            else
+            {
+                // Add new item
+                itemsList.Add(newItem);
+            }
         }
     }
+
+
+    // public void AddOrUpdateItem(Item item)
+    // {
+    //     TextLog.Instance.Log("[IDP] Adding Or Updating Item");
+    //     if (!string.IsNullOrWhiteSpace(item.Craft_ID))
+    //     {
+    //         if (!ItemsByCraftID.ContainsKey(item.Craft_ID))
+    //         {
+    //             ItemsByCraftID[item.Craft_ID] = new List<Item>();
+    //         }
+    //         ItemsByCraftID[item.Craft_ID].Add(item);
+    //     }
+    // }
 
 }
