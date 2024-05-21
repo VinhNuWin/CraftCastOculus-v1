@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using MyCraft.Models;
 
 public class CraftUI : MonoBehaviour
 {

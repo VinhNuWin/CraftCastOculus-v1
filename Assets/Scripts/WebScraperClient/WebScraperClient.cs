@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using UnityEngine.Networking;
+using MyCraft.Models;
 
 public class Response
 {

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI; // Ensure this namespace is included for UI components
+using MyCraft.Models;
 
 public class StepUI : MonoBehaviour
 {

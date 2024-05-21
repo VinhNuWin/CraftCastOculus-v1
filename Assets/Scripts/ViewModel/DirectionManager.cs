@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine.Video;
+using MyCraft.Models;
 
 public class DirectionManager : MonoBehaviour
 {
@@ -21,6 +22,7 @@ public class DirectionManager : MonoBehaviour
     private Button nextStepButton;
     private Button previousStepButton;
     private int currentStepIndex = 0;
+    public CanvasFader canvasFader;
 
     void Start()
     {
@@ -32,6 +34,11 @@ public class DirectionManager : MonoBehaviour
         if (SceneManager.GetActiveScene().name == "CraftScene")
         {
             InitializeDirection();
+            // Start the canvas fade-in effect
+            if (canvasFader != null)
+            {
+                canvasFader.StartFadeIn();
+            }
         }
     }
 
@@ -182,6 +189,4 @@ public class DirectionManager : MonoBehaviour
     //     previousStepButton.interactable = currentStepIndex > 0;
     // }
 }
-
-
 

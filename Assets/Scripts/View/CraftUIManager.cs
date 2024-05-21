@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using MyCraft.Models;
 
 public class CraftUIManager : MonoBehaviour
 {

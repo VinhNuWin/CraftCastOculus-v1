@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Linq;
 using TMPro;
+using MyCraft.Models;
 
 public class CraftViewModel : MonoBehaviour
 {

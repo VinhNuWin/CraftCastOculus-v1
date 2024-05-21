@@ -1,6 +1,7 @@
 using Oculus.Interaction;
 using UnityEngine;
 using UnityEngine.Events;
+using MyCraft.Models;
 
 public class CraftPokeInteractable : MonoBehaviour, IPokeInteractable
 {

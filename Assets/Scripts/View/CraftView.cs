@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
+using MyCraft.Models;
 
 public class CraftView : MonoBehaviour
 {

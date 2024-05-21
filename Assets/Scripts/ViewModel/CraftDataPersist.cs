@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using MyCraft.Models;
 
 public class CraftDataPersist : MonoBehaviour
 {
@@ -19,14 +20,14 @@ public class CraftDataPersist : MonoBehaviour
             if (selectedCraft != value)
             {
                 selectedCraft = value;
-                TextLog.Instance.Log($"[CDP] SelectedCraft updated with {selectedCraft.Craft_Name}");
+                Debug.Log($"[CDP] SelectedCraft updated with {selectedCraft.Craft_Name}");
                 if (OnCraftSelected != null)
                 {
                     OnCraftSelected?.Invoke(selectedCraft);
                 }
                 else
                 {
-                    TextLog.Instance.Log("[CDP] No subscribers to OnCraftSelected when trying to invoke.");
+                    Debug.Log("[CDP] No subscribers to OnCraftSelected when trying to invoke.");
                 }
             }
         }
@@ -38,7 +39,7 @@ public class CraftDataPersist : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            TextLog.Instance.Log("[CDP] Instantiated");
+            Debug.Log("[CDP] Instantiated");
         }
         else if (Instance != this)
         {
@@ -53,18 +54,18 @@ public class CraftDataPersist : MonoBehaviour
         {
             if (Crafts.ContainsKey(craft.Craft_ID))
             {
-                TextLog.Instance.Log("[CDP] Updating Craft");
+                Debug.Log("[CDP] Updating Craft");
                 Crafts[craft.Craft_ID] = craft;
             }
             else
             {
-                TextLog.Instance.Log("[CDP] Adding New Craft");
+                Debug.Log("[CDP] Adding New Craft");
                 Crafts.Add(craft.Craft_ID, craft);
             }
         }
         else
         {
-            TextLog.Instance.Log("[CDP] Invalid craft or Craft_ID is null/empty, not added or updated.");
+            Debug.Log("[CDP] Invalid craft or Craft_ID is null/empty, not added or updated.");
         }
     }
 
@@ -91,11 +92,11 @@ public class CraftDataPersist : MonoBehaviour
                 // Assigns selectedCraft and Invokes OnCraftSelected
                 SelectedCraft = craft;
             }
-            TextLog.Instance.Log($"Processed and stored craft from WebSocket: {craft.Craft_Name}");
+            Debug.Log($"Processed and stored craft from WebSocket: {craft.Craft_Name}");
         }
         catch (Exception ex)
         {
-            TextLog.Instance.Log($"Error processing WebSocket data: {ex.Message}");
+            Debug.Log($"Error processing WebSocket data: {ex.Message}");
         }
     }
 

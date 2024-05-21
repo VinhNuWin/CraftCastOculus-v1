@@ -9,6 +9,7 @@ using Best.WebSockets;
 using Best.HTTP.Shared.PlatformSupport.Memory;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
+using MyCraft.Models;
 
 public class BestWebSocketClient : MonoBehaviour
 {
@@ -44,15 +45,6 @@ public class BestWebSocketClient : MonoBehaviour
     {
         TextLog.Instance.Log("Connection opened!");
     }
-
-    // private void OnMessageReceived(WebSocket webSocket, string message)
-    // {
-    //     MainThreadDispatcher.Enqueue(() =>
-    //     {
-    //         // string jsonData = Encoding.UTF8.GetString(message);
-    //         TextLog.Instance.Log("OnMessageReceived " + message);
-    //     });
-    // }
 
     private void OnMessageReceived(WebSocket webSocket, string message)
     {
@@ -133,49 +125,6 @@ public class BestWebSocketClient : MonoBehaviour
             Debug.LogError("Error processing craft data: " + ex.Message);
         }
     }
-
-    // private void ProcessCraftData(string jsonData)
-    // {
-    //     Debug.Log("Received JSON Data: " + jsonData);
-    //     try
-    //     {
-    //         ChatResponse response = JsonUtility.FromJson<ChatResponse>(jsonData);
-    //         if (response != null && !string.IsNullOrEmpty(response.chatResponse))
-    //         {
-    //             Debug.Log("Inner JSON Data: " + response.chatResponse);
-    //             // Now parse the inner JSON string into the Craft object
-    //             Craft craft = JsonUtility.FromJson<Craft>(response.chatResponse);
-
-    //             if (craft != null)
-    //             {
-    //                 if (CraftDataPersist.Instance != null)
-    //                 {
-    //                     CraftDataPersist.Instance.ProcessWebSocketData(craft);
-    //                     // ProcessStepsData(craft.Steps);
-    //                     // ProcessItemsData(craft.Items);
-    //                 }
-    //                 else
-    //                 {
-    //                     Debug.LogError("CraftDataPersist.Instance is not initialized");
-    //                 }
-    //             }
-    //             else
-    //             {
-    //                 Debug.LogError("Craft_Name is null");
-    //             }
-    //         }
-    //         else
-    //         {
-    //             Debug.LogError("Failed to deserialize ChatResponse or chatResponse is empty");
-    //         }
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         Debug.LogError("Error processing craft data: " + ex.Message);
-    //     }
-    // }
-
-
 
     private void OnWebSocketClosed(WebSocket webSocket, WebSocketStatusCodes code, string message)
     {
